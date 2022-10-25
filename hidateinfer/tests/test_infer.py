@@ -72,9 +72,9 @@ def test_case_for_example(test_data):
 
             expected = self.test_data["format"]
             testcase_locale = self.test_data.get("locale", "en_US.UTF-8")
-
+            arguments = self.test_data.get("arguments", {})
             with setlocale(testcase_locale):
-                actual = infer(self.test_data["examples"])
+                actual = infer(self.test_data["examples"], **arguments)
 
             error_fmt = "{0}: Inferred `{1}`!=`{2}`"
 
@@ -96,7 +96,8 @@ class TestAmbiguousDateCases(unittest.TestCase):
     """
 
     def testAmbg1(self):
-        self.assertIn(infer(["1/1/2012"]), ["%m/%d/%Y", "%d/%m/%Y"])
+        dateformat = infer(["1/1/2012"])
+        self.assertIn(dateformat, ["%m/%d/%Y", "%d/%m/%Y"])
 
     def testAmbg2(self):
         # Note: as described in Issue #5 (https://github.com/jeffreystarr/dateinfer/issues/5), the

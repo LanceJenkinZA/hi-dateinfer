@@ -187,21 +187,37 @@ RULES = [
     ),
 ]
 
-
 _alt_directives = {'%z': '%Y',
                    '%Y': '%z'}
 
 
-def infer(examples, alt_rules=None):
+def infer(examples, alt_rules=None, day_first=False, day_last=False):
     """
     Returns a datetime.strptime-compliant format string for parsing the *most likely* date format
     used in examples. examples is a list containing example date strings.
     """
+    global RULES
     date_classes = _tag_most_likely(examples)
 
     if alt_rules:
         date_classes = _apply_rewrites(date_classes, alt_rules)
     else:
+        if day_last:
+            RULES += [If(
+                Sequence(Year4, ".", DayOfMonth, ".", MonthNum),
+                SwapSequence(
+                    [Year4, ".", DayOfMonth, ".", MonthNum],
+                    [Year4, KeepOriginal, DayOfMonth, KeepOriginal, MonthNum],
+                ),
+            )]
+        if day_first:
+            RULES += [If(
+                Sequence(MonthNum, ".", DayOfMonth, ".", Year4),
+                SwapSequence(
+                    [MonthNum, ".", DayOfMonth, ".", Year4],
+                    [DayOfMonth, KeepOriginal, MonthNum, KeepOriginal, Year4],
+                ),
+            ), ]
         date_classes = _apply_rewrites(date_classes, RULES)
 
     date_string = ""
@@ -351,7 +367,7 @@ def _tokenize_by_character_class(s):
                 result.append(token)
                 break
         if (
-            not progress
+                not progress
         ):  # none of the character classes matched; unprintable character?
             result.append(rest[0])
             rest = rest[1:]

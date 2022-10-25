@@ -191,3 +191,12 @@ examples:
   - "8/02/2022 14:15"
   - "8/02/2022 16:30"
 ...
+
+---
+name: Test moment mapping
+format: "YYYY-MM-DD hh:mm:ss"
+arguments:
+  format_type: "moment"
+examples:
+  - "2022-10-28 09:30:00"
+...

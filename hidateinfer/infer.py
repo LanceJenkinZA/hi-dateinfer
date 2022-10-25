@@ -25,6 +25,7 @@ from hidateinfer.date_elements import (
     Year2,
     Year4,
 )
+from hidateinfer.mappings import moment
 from hidateinfer.ruleproc import (
     And,
     Contains,
@@ -190,8 +191,21 @@ RULES = [
 _alt_directives = {'%z': '%Y',
                    '%Y': '%z'}
 
+_format_mapping = {
+    "python": None,
+    "moment": moment.mapping
+}
 
-def infer(examples, alt_rules=None, day_first=False, day_last=False):
+
+def change_format(format, mapping):
+    if _format_mapping.get(mapping) is None:
+        return format
+    for k, v in _format_mapping[mapping].items():
+        format = format.replace(k, v)
+    return format
+
+
+def infer(examples, alt_rules=None, day_first=False, day_last=False, format_type="python"):
     """
     Returns a datetime.strptime-compliant format string for parsing the *most likely* date format
     used in examples. examples is a list containing example date strings.
@@ -232,7 +246,7 @@ def infer(examples, alt_rules=None, day_first=False, day_last=False):
         directives.append(directive)
         date_string += directive
 
-    return date_string
+    return change_format(date_string, format_type)
 
 
 def _apply_rewrites(date_classes, rules):

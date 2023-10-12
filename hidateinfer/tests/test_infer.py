@@ -242,3 +242,21 @@ class TestTokenizeByCharacterClass(unittest.TestCase):
             ["4", "/", "30", "/", "1998", " ", "4", ":", "52", " ", "am"],
             t("4/30/1998 4:52 am"),
         )
+
+class TestOctober(unittest.TestCase):
+
+    def testOctoberDates(self):
+        examples = ["10/1/2021", "10/2/2021", "10/3/2021", "10/4/2021", "10/5/2021", "10/6/2021", "10/7/2021", "10/8/2021", "10/9/2021", "10/10/2021", "10/11/2021", "10/12/2021", "10/13/2021", "10/14/2021", "10/15/2021", "10/16/2021", "10/17/2021", "10/18/2021", "10/19/2021", "10/20/2021", "10/21/2021", "10/22/2021", "10/23/2021", "10/24/2021", "10/25/2021", "10/26/2021", "10/27/2021", "10/28/2021", "10/29/2021", "10/30/2021", "10/31/2021"]
+        t = _tag_most_likely
+
+        actual = t(examples)
+        expected = [MonthNum(), Filler("/"), DayOfMonth(), Filler("/"), Year4()]
+
+        self.assertListEqual(actual, expected)
+
+    def testOctoberDates2(self):
+        examples = ["2023-10-11 21:14:00"]
+        format = infer(examples, day_first=True, day_last=True, format_type="moment")
+        expected = "YYYY-MM-DD HH:mm:ss"
+
+        self.assertEqual(format, expected)

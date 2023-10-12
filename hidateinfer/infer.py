@@ -221,7 +221,7 @@ def infer(examples, alt_rules=None, day_first=False, day_last=False, format_type
                 Sequence(Year4, ".", DayOfMonth, ".", MonthNum),
                 SwapSequence(
                     [Year4, ".", DayOfMonth, ".", MonthNum],
-                    [Year4, KeepOriginal, DayOfMonth, KeepOriginal, MonthNum],
+                    [Year4, KeepOriginal, MonthNum, KeepOriginal, DayOfMonth],
                 ),
             )]
         if day_first:

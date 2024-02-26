@@ -15,7 +15,7 @@ mapping = {
     "%M": "mm",
     "%S": "ss",
     "%f": "SSSSSSSSS",
-    "%z": "+-HHmm",
+    "%z": "z",
     "%Z": "ZZ",
     "%j": "DDDD",
     "%U": "ww",
